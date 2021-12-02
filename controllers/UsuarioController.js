@@ -71,7 +71,7 @@ module.exports = {
           { expiresIn: "1h"}
         );
 
-        res.status(200).json({ token, user: dados[0].nome })
+        res.status(200).json({ token, user: dados[0].nome, userId: dados[0].id })
       } else {
       //  res.status(400).json({ erro: "Senha Incorreta" });
         res.status(200).json({ erro: "Login/senha incorretos" });

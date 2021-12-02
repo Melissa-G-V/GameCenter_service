@@ -20,6 +20,20 @@ module.exports = {
     res.status(200).json(carros);
   },
 
+
+  async index2(req, res) {
+  
+    const carros = await knex
+      .select("c.id", "c.modelo","r.comentario","r.usuarios_id","r.estrelas","c.foto","m.nome as marca", "c.ano", "c.preco", "c.foto", "c.destaque")
+      .from("carros as c")
+      .leftJoin("marcas as m", "c.marca_id", "m.id")
+      .leftJoin("reviews as r", "c.id", "r.carros_id").whereNotNull('r.id')
+      .orderBy("c.id", "desc");
+    res.status(200).json(carros);
+  },
+
+
+
   async show(req, res) {
     const id = req.params.id; // ou:  const { id } = req.params
 
@@ -115,6 +129,18 @@ module.exports = {
     res.status(200).json(carros);
   },
   
+  async like(req,res){
+    const id = req.params.id;
+    dados = await knex("carros").where({id})
+    const numLike = dados[0].likes
+    try {
+      await knex("carros").update({likes: numLike+1}).where({id});
+      res.status(200).json({ok:1})
+    } catch (error) {
+      res.status(400)
+      .json({ok:0,msg:`erro na alteração${error.message}`})
+    }
+  },
   async destroy(req, res) {
     const id = req.params.id; // ou:  const { id } = req.params
     try {
