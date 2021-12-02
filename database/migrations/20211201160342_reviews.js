@@ -6,10 +6,10 @@ exports.up = (knex) => {
            .references("usuarios.id")
            .onDelete("restrict")
            .onUpdate("cascade")
-      table.integer("carros_id").notNullable().unsigned();
-      table.foreign('carros_id')
-            .references("carros.id")
-            .onDelete("restrict")
+      table.integer("jogos_id").notNullable().unsigned();
+      table.foreign('jogos_id')
+            .references("jogos.id")
+            .onDelete("cascade")
             .onUpdate("cascade")
             table.string('comentario', 100).notNullable();
             table.integer("estrelas").notNullable();

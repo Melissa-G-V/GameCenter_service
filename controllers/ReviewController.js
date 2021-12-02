@@ -9,10 +9,10 @@ module.exports = {
 
   async index(req, res) {
     const reviews = await knex
-      .select("r.id","c.foto" ,"r.comentario","c.modelo","r.usuarios_id","u.id","u.nome","u.email", "r.estrelas")
+      .select("r.id", "j.foto" ,"r.comentario","j.jnome","r.usuarios_id","u.id","u.nome","u.email", "r.estrelas")
       .from("reviews as r")
       .leftJoin("usuarios as u", "r.usuarios_id", "u.id")
-      .leftJoin("carros as c", "r.carros_id", "c.id")
+      .leftJoin("jogos as j", "r.jogos_id", "j.id")
       .orderBy("r.id", "desc");
     res.status(200).json(reviews);
   },
@@ -20,7 +20,7 @@ module.exports = {
 
   async store(req, res) {
     console.log(req.body)
-    const { comentario, estrelas, usuarios_id, carros_id  } = req.body;
+    const { comentario, estrelas, usuarios_id, jogos_id  } = req.body;
 
     if (!usuarios_id) {
       res.status(400).json({
@@ -28,15 +28,15 @@ module.exports = {
       });
       return;
     }
-    if (!comentario || !estrelas || !usuarios_id || !carros_id) {
+    if (!comentario || !estrelas || !usuarios_id || !jogos_id) {
       res.status(400).json({
-        erro: "Enviar comentario estrela e usuario e carro",
+        erro: "Enviar comentario estrela e usuario e jogo",
       });
       return;
     }
     try {
       const novo = await knex("reviews").insert({
-        comentario, estrelas, usuarios_id, carros_id
+        comentario, estrelas, usuarios_id, jogos_id
       });
       res.status(201).json({ id: novo[0] });
     } catch (error) {
@@ -47,10 +47,10 @@ module.exports = {
 
   async store2(req, res) {
     console.log(req.body)
-    const{comentario, estrelas, usuarios_id, carros_id}=req.body;
+    const{comentario, estrelas, usuarios_id, jogos_id}=req.body;
     try {
         const novo = await knex("reviews").insert({
-            comentario, estrelas, usuarios_id, carros_id
+            comentario, estrelas, usuarios_id, jogos_id
         })
         res.status(201).json({id:novo[0]})
     } catch (error) {
@@ -59,8 +59,8 @@ module.exports = {
   },
 
   async pesq(req,res){
-    const {usuarios_id, carros_id} = req.params;
-    const like = await knex('reviews').where('usuarios_id', usuarios_id).andWhere('carros_id', carros_id)
+    const {usuarios_id, jogos_id} = req.params;
+    const like = await knex('reviews').where('usuarios_id', usuarios_id).andWhere('jogos_id', jogos_id)
     res.status(200).json(like)
 }
 
